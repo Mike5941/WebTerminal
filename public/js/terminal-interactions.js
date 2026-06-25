@@ -481,6 +481,11 @@ export function attachTerminalBehavior(session) {
       sendInput(session, '\x15');
       return false;
     }
+    if (e.key === 'Delete') {
+      e.preventDefault();
+      sendInput(session, '\x0b');
+      return false;
+    }
     if (e.key.toLowerCase() === 'z') {
       e.preventDefault();
       sendInput(session, '\x1f');

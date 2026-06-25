@@ -5,7 +5,7 @@ export const terminalOptions = {
   fontFamily: '"SF Mono", "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
   fontSize: 14,
   fontWeight: 500,
-  lineHeight: 1.4,
+  lineHeight: 1.25,
   theme: {
     // "Claude Dark" — hues sampled from the editor screenshot, mapped onto the
     // ANSI palette so ls/prompt/etc. pick them up (terminals can't syntax-highlight).
@@ -32,4 +32,3 @@ export const terminalOptions = {
     brightWhite: '#f0ebe2',
   },
 };
-
