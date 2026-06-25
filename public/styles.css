@@ -53,11 +53,11 @@ body {
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
-  /* overflow-x:auto forces overflow-y to clip too; give vertical slack so the
+  /* overflow-x:auto forces overflow-y to clip too; give vertical/horizontal slack so the
      pop overshoot / tab border isn't shaved, and cancel it with negative margin
-     so the bar height is unchanged. */
-  padding-block: 4px;
-  margin-block: -4px;
+     so the bar size is unchanged. */
+  padding: 4px;
+  margin: -4px;
 }
 
 .tab-indicator {
