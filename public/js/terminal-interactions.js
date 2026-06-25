@@ -146,6 +146,18 @@ function clearClickSelection(session) {
   session.term.clearSelection();
 }
 
+function clearTerminalSelection(session) {
+  session.term.clearSelection();
+  window.getSelection()?.removeAllRanges();
+}
+
+function clearTerminalSelectionSoon(session) {
+  clearTerminalSelection(session);
+  window.requestAnimationFrame(() => clearTerminalSelection(session));
+  window.setTimeout(() => clearTerminalSelection(session), 0);
+  window.setTimeout(() => clearTerminalSelection(session), 30);
+}
+
 function suppressSelection(session) {
   session.container.classList.add('suppress-selection');
 }
@@ -356,6 +368,27 @@ export function attachTerminalBehavior(session) {
   term.onData((data) => {
     sendInput(session, data);
   });
+
+  term.element.addEventListener('keydown', (e) => {
+    if (!e.metaKey || e.altKey || e.shiftKey) return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'Home') {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      session.keyboardSelectionAnchor = null;
+      clearTerminalSelectionSoon(session);
+      sendInput(session, '\x01');
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'End') {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      session.keyboardSelectionAnchor = null;
+      clearTerminalSelectionSoon(session);
+      sendInput(session, '\x05');
+    }
+  }, true);
 
   term.attachCustomKeyEventHandler((e) => {
     if (e.type !== 'keydown') return true;
