@@ -5,11 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "node scripts/fix-pty-permissions.js",
-    "check": "npm run check:docs && npm run check:structure && npm run smoke",
-    "check:docs": "node harness/checks/check-docs.js",
-    "check:structure": "node harness/checks/check-structure.js",
-    "smoke": "node harness/checks/smoke-webterminal.js"
+    "postinstall": "node scripts/fix-pty-permissions.js"
   },
   "dependencies": {
     "express": "^4.19.2",

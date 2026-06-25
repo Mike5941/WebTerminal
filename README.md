@@ -70,14 +70,7 @@ a public network** — there is no authentication.
 ```
 server.js            Express + ws + node-pty backend
 public/index.html    xterm.js frontend (single file)
-docs/                Architecture, operations, decisions
-harness/             Repository checks (npm run check)
-```
-
-## Verification
-
-```sh
-npm run check     # docs + structure + runtime smoke checks
+scripts/             Helpers (autostart, postinstall pty fix)
 ```
 
 ## Troubleshooting

@@ -1,8 +1,11 @@
 node_modules/
 npm-debug.log*
 
-# Local Claude Code settings (machine-specific paths/permissions)
-.claude/settings.local.json
+# Claude Code / agent scaffolding (kept local, not part of the app)
+.claude/
+AGENTS.md
+harness/
+docs/
 
 # Unrelated local notes
 harness-engineering.md
