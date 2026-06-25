@@ -1,0 +1,11 @@
+node_modules/
+npm-debug.log*
+
+# Local Claude Code settings (machine-specific paths/permissions)
+.claude/settings.local.json
+
+# Unrelated local notes
+harness-engineering.md
+
+# OS junk
+.DS_Store
