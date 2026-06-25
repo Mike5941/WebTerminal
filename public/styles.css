@@ -1,0 +1,222 @@
+:root {
+  color-scheme: dark;
+  --bg: #1e1d1b;
+  --tab-bg: #242424;
+  --tab-active: #303030;
+  --tab-border: #3b3b3b;
+  --text: #f4f4f4;
+  --muted: #a8a8a8;
+  --term-pad-top: 24px;
+  --term-pad-bottom: 12px;
+  --term-pad-x: 16px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  height: 100%;
+  font-family: "SF Mono", "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+body {
+  overflow: hidden;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: 44px minmax(0, 1fr);
+  height: 100vh;
+  background: var(--bg);
+}
+
+#sessionBar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 8px;
+  background: var(--tab-bg);
+  border-bottom: 1px solid var(--tab-border);
+  box-sizing: border-box;
+}
+
+#sessionTabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+#sessionTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.session-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  min-width: 92px;
+  max-width: 180px;
+  padding: 0 8px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.session-tab.active {
+  color: var(--text);
+  background: var(--tab-active);
+  border-color: var(--tab-border);
+}
+
+.session-tab-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-tab-rename {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  outline: none;
+  font: inherit;
+  font-size: 12px;
+}
+
+.session-close,
+#addSession {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.session-close:hover,
+#addSession:hover {
+  color: var(--text);
+  background: #3a3a3a;
+}
+
+#terminalHost {
+  position: relative;
+  min-height: 0;
+}
+
+.terminal-session {
+  position: absolute;
+  /* Use position offsets (not padding) for the gap. FitAddon reads the
+   container's computed height to size rows; with border-box + padding that
+   height still includes the padding, so it over-counts rows. Insetting the
+   container shrinks its real height, so row math stays correct. */
+  inset: var(--term-pad-top) var(--term-pad-x) var(--term-pad-bottom);
+  box-sizing: border-box;
+  visibility: hidden;
+}
+
+/* Thin, themed scrollbar in place of the bulky native macOS overlay bar. */
+.terminal-session .xterm-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+
+.terminal-session .xterm-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-session .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #4a4640;
+  border: 3px solid var(--bg);
+  border-radius: 8px;
+}
+
+.terminal-session .xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background: #5c574f;
+}
+
+.terminal-session.active {
+  visibility: visible;
+}
+
+.terminal-session.suppress-selection .xterm-selection {
+  display: none !important;
+}
+
+.terminal-session .xterm {
+  height: 100%;
+}
+
+.scrollbar-hit-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 12px;
+  cursor: default;
+  z-index: 5;
+}
+
+.copy-toast {
+  position: fixed;
+  transform: translate(-50%, -130%);
+  background: var(--tab-active);
+  color: var(--text);
+  border: 1px solid var(--tab-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+  animation: copy-toast-fade 0.9s ease forwards;
+}
+
+@keyframes copy-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -120%);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -130%);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -150%);
+  }
+}
+
+.xterm .xterm-rows .xterm-cursor {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: inset 2px 0 0 #d97757 !important;
+}
+
+.xterm .xterm-rows .xterm-cursor-outline {
+  outline: none !important;
+}

@@ -1,0 +1,35 @@
+export const terminalOptions = {
+  cursorBlink: true,
+  cursorStyle: 'bar',
+  cursorWidth: 2,
+  fontFamily: '"SF Mono", "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: 1.4,
+  theme: {
+    // "Claude Dark" — hues sampled from the editor screenshot, mapped onto the
+    // ANSI palette so ls/prompt/etc. pick them up (terminals can't syntax-highlight).
+    background: '#1e1d1b',
+    foreground: '#e6e1d8',
+    cursor: '#d97757',
+    cursorAccent: '#1e1d1b',
+    selectionBackground: '#3f3a34',
+    black: '#1e1d1b',
+    red: '#cc7c5e',
+    green: '#8aa872',
+    yellow: '#d3a55f',
+    blue: '#6b9bc3',
+    magenta: '#b08cc4',
+    cyan: '#6bb0aa',
+    white: '#d4cfc6',
+    brightBlack: '#5c574f',
+    brightRed: '#e08a68',
+    brightGreen: '#9cba84',
+    brightYellow: '#e0b574',
+    brightBlue: '#7fabd4',
+    brightMagenta: '#c29fd4',
+    brightCyan: '#7fc0ba',
+    brightWhite: '#f0ebe2',
+  },
+};
+
