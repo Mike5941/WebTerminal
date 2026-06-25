@@ -251,6 +251,35 @@ function countCharsBetweenColumns(buf, absRow, colA, colB) {
   return count;
 }
 
+function getPromptCommandText(lineText) {
+  const promptIndex = Math.max(
+    lineText.lastIndexOf('❯'),
+    lineText.lastIndexOf('>'),
+    lineText.lastIndexOf('%'),
+  );
+  if (promptIndex === -1) return null;
+  return lineText.slice(promptIndex + 1).trimStart();
+}
+
+function deleteContinuationBreak(session) {
+  const { term } = session;
+  const buf = term.buffer.active;
+  const absRow = buf.baseY + buf.cursorY;
+  const currentText = buf.getLine(absRow)?.translateToString(true) ?? '';
+  const currentTrimmed = currentText.trimStart();
+
+  if (!currentTrimmed.startsWith('>')) return false;
+  if (currentTrimmed.slice(1).trim() !== '') return false;
+
+  const previousText = buf.getLine(absRow - 1)?.translateToString(true) ?? '';
+  const previousCommand = getPromptCommandText(previousText);
+  if (!previousCommand || !/\\\s*$/.test(previousCommand)) return false;
+
+  const commandWithoutContinuation = previousCommand.replace(/\\\s*$/, '');
+  sendInput(session, `\x03${commandWithoutContinuation}`);
+  return true;
+}
+
 function handleKeyboardSelection(session, e) {
   if (!e.shiftKey) {
     session.keyboardSelectionAnchor = null;
@@ -406,6 +435,11 @@ export function attachTerminalBehavior(session) {
         navigator.clipboard.writeText(text);
         return false;
       }
+    }
+
+    if (e.key === 'Backspace' && deleteContinuationBreak(session)) {
+      e.preventDefault();
+      return false;
     }
 
     if ((e.key === 'Backspace' || e.key === 'Delete') && deleteSelectedInput(session)) {
