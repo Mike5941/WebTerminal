@@ -488,7 +488,9 @@ export function attachTerminalBehavior(session) {
     }
     if (e.key.toLowerCase() === 'z') {
       e.preventDefault();
-      sendInput(session, '\x1f');
+      // Undo = Ctrl+_ (zle default). Redo has no default zle binding, so send a
+      // private seq (ESC Ctrl-R) that .zshrc maps to the `redo` widget.
+      sendInput(session, e.shiftKey ? '\x1b\x12' : '\x1f');
       return false;
     }
     return true;

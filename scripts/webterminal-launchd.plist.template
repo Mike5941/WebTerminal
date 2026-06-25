@@ -8,8 +8,12 @@
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>cd __WEBTERMINAL_DIR__ &amp;&amp; PORT=3000 npm start</string>
+    <!-- exec replaces the shell with node so launchd supervises node directly;
+         unload then kills it cleanly (no orphan holding port 3000). -->
+    <string>PORT=3000 exec node server.js</string>
   </array>
+  <key>WorkingDirectory</key>
+  <string>__WEBTERMINAL_DIR__</string>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>

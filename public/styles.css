@@ -6,7 +6,7 @@
   --tab-border: #3b3b3b;
   --text: #f4f4f4;
   --muted: #a8a8a8;
-  --term-pad-top: 24px;
+  --term-pad-top: 10px;
   --term-pad-bottom: 12px;
   --term-pad-x: 16px;
 }
@@ -41,15 +41,43 @@ body {
   background: var(--tab-bg);
   border-bottom: 1px solid var(--tab-border);
   box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #sessionTabs {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+  /* overflow-x:auto forces overflow-y to clip too; give vertical slack so the
+     pop overshoot / tab border isn't shaved, and cancel it with negative margin
+     so the bar height is unchanged. */
+  padding-block: 4px;
+  margin-block: -4px;
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  height: 28px;
+  background: var(--tab-active);
+  border: 1px solid var(--tab-border);
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 0;
+  transition: left 220ms cubic-bezier(0.2, 0.8, 0.3, 1),
+    width 220ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.tab-indicator.no-anim {
+  transition: none;
 }
 
 #sessionTabs::-webkit-scrollbar {
@@ -72,6 +100,8 @@ body {
   font-size: 12px;
   cursor: pointer;
   transform-origin: center;
+  position: relative;
+  z-index: 1;
 }
 
 .session-tab.entering {
@@ -96,8 +126,6 @@ body {
 
 .session-tab.active {
   color: var(--text);
-  background: var(--tab-active);
-  border-color: var(--tab-border);
 }
 
 .session-tab-label {
@@ -119,7 +147,8 @@ body {
 }
 
 .session-close,
-#addSession {
+#addSession,
+#broadcastToggle {
   display: inline-grid;
   place-items: center;
   width: 20px;
@@ -135,9 +164,30 @@ body {
 }
 
 .session-close:hover,
-#addSession:hover {
+#addSession:hover,
+#broadcastToggle:hover {
   color: var(--text);
   background: #3a3a3a;
+}
+
+#broadcastToggle {
+  flex: 0 0 auto;
+  font-size: 13px;
+}
+
+#broadcastToggle.active {
+  color: #1e1d1b;
+  background: #d97757;
+}
+
+#broadcastToggle.active:hover {
+  background: #e08a68;
+}
+
+/* Tabs in the broadcast group: coral ring so it's clear input hits them all. */
+.session-tab.broadcast {
+  box-shadow: inset 0 0 0 1px #d97757;
+  border-radius: 6px;
 }
 
 #terminalHost {
