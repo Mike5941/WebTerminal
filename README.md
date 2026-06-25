@@ -43,6 +43,22 @@ HOST=127.0.0.1 PORT=3001 npm start
 
 By default the server binds to `127.0.0.1` only.
 
+## Autostart at login (macOS)
+
+To run the server automatically at login via launchd:
+
+```sh
+sh scripts/install-autostart.sh
+```
+
+The script fills in this machine's repo path automatically and loads the agent.
+To remove it:
+
+```sh
+launchctl unload ~/Library/LaunchAgents/local.webterminal.plist
+rm ~/Library/LaunchAgents/local.webterminal.plist
+```
+
 ## Security
 
 This server gives any connected browser a full shell with your user's
