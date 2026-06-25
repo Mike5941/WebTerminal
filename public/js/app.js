@@ -393,6 +393,18 @@ window.addEventListener('keydown', (event) => {
     event.stopImmediatePropagation();
     if (event.shiftKey) closeOtherSessions();
     else if (activeSessionId !== null) closeSession(activeSessionId);
+    return;
+  }
+
+  // Ctrl+1..9 = jump to the Nth tab (9 = last).
+  if (event.ctrlKey && !event.altKey && !event.shiftKey && /^Digit[1-9]$/.test(event.code)) {
+    const n = Number(event.code.slice(5));
+    const target = n === 9 ? sessions[sessions.length - 1] : sessions[n - 1];
+    if (target) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      activateSession(target.id);
+    }
   }
 }, true);
 
