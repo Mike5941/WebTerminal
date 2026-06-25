@@ -13,6 +13,9 @@
     --tab-border: #3b3b3b;
     --text: #f4f4f4;
     --muted: #a8a8a8;
+    --term-pad-top: 24px;
+    --term-pad-bottom: 72px;
+    --term-pad-x: 16px;
   }
 
   html, body {
@@ -129,10 +132,32 @@
 
   .terminal-session {
     position: absolute;
-    inset: 0;
-    padding: 24px 16px 72px;
+    /* Use position offsets (not padding) for the gap. FitAddon reads the
+       container's computed height to size rows; with border-box + padding that
+       height still includes the padding, so it over-counts rows. Insetting the
+       container shrinks its real height, so row math stays correct. */
+    inset: var(--term-pad-top) var(--term-pad-x) var(--term-pad-bottom);
     box-sizing: border-box;
     visibility: hidden;
+  }
+
+  /* Thin, themed scrollbar in place of the bulky native macOS overlay bar. */
+  .terminal-session .xterm-viewport::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .terminal-session .xterm-viewport::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .terminal-session .xterm-viewport::-webkit-scrollbar-thumb {
+    background: #4a4640;
+    border: 3px solid var(--bg);
+    border-radius: 8px;
+  }
+
+  .terminal-session .xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: #5c574f;
   }
 
   .terminal-session.active {
@@ -149,10 +174,10 @@
 
   .scrollbar-hit-area {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    bottom: 16px;
-    width: 18px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 12px;
     cursor: default;
     z-index: 5;
   }
