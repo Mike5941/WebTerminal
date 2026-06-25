@@ -23,6 +23,10 @@ mkdir -p "$AGENTS_DIR"
 # Substitute the placeholder with this machine's actual repo path.
 sed "s|__WEBTERMINAL_DIR__|$REPO_DIR|g" "$TEMPLATE" > "$TARGET"
 
+# Ensure dependencies are installed
+echo "Installing dependencies..."
+(cd "$REPO_DIR" && npm install)
+
 # Reload if already installed.
 launchctl unload "$TARGET" 2>/dev/null || true
 launchctl load "$TARGET"
