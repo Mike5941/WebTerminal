@@ -71,6 +71,27 @@ body {
   font: inherit;
   font-size: 12px;
   cursor: pointer;
+  transform-origin: center;
+}
+
+.session-tab.entering {
+  animation: tab-pop-in 220ms cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.session-tab.leaving {
+  animation: tab-pop-out 180ms cubic-bezier(0.7, 0, 0.84, 0) forwards;
+  pointer-events: none;
+}
+
+@keyframes tab-pop-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes tab-pop-out {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.7); opacity: 0; }
 }
 
 .session-tab.active {
@@ -156,6 +177,21 @@ body {
 
 .terminal-session.active {
   visibility: visible;
+}
+
+.terminal-session.opening {
+  animation: term-reveal 200ms ease-out;
+}
+
+@keyframes term-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .terminal-session.suppress-selection .xterm-selection {

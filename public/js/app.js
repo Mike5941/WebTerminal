@@ -7,8 +7,8 @@ const sessionTabs = document.getElementById('sessionTabs');
 const addSessionButton = document.getElementById('addSession');
 const sessions = [];
 let activeSessionId = null;
-let nextSessionId = 1;
 let renamingSessionId = null;
+let enteringSessionId = null;
 
 function sendInput(session, data) {
   if (session.ws.readyState === WebSocket.OPEN) {
@@ -54,7 +54,8 @@ function renderTabs() {
   for (const session of sessions) {
     const tab = document.createElement('div');
     tab.tabIndex = 0;
-    tab.className = `session-tab${session.id === activeSessionId ? ' active' : ''}`;
+    tab.className = `session-tab${session.id === activeSessionId ? ' active' : ''}${session.id === enteringSessionId ? ' entering' : ''}`;
+    tab.dataset.sessionId = session.id;
     tab.setAttribute('role', 'tab');
     tab.setAttribute('aria-selected', String(session.id === activeSessionId));
     tab.title = session.title;
@@ -112,6 +113,7 @@ function renderTabs() {
 
     sessionTabs.append(tab);
   }
+  enteringSessionId = null;
 }
 
 function activateSession(id) {
@@ -127,8 +129,7 @@ function activateSession(id) {
   renderTabs();
 }
 
-function closeSession(id) {
-  if (sessions.length <= 1) return;
+function teardownSession(id) {
   const index = sessions.findIndex((session) => session.id === id);
   if (index === -1) return;
 
@@ -141,9 +142,22 @@ function closeSession(id) {
   activateSession(activeSessionId === id ? nextActive.id : activeSessionId);
 }
 
+function closeSession(id) {
+  if (sessions.length <= 1) return;
+  if (!sessions.some((session) => session.id === id)) return;
+
+  const tab = sessionTabs.querySelector(`.session-tab[data-session-id="${id}"]`);
+  if (!tab || tab.classList.contains('leaving')) {
+    teardownSession(id);
+    return;
+  }
+
+  tab.classList.add('leaving');
+  tab.addEventListener('animationend', () => teardownSession(id), { once: true });
+}
+
 function createSession() {
-  const id = nextSessionId;
-  nextSessionId += 1;
+  const id = sessions.reduce((max, session) => Math.max(max, session.id), 0) + 1;
 
   const container = document.createElement('div');
   container.className = 'terminal-session';
@@ -154,7 +168,7 @@ function createSession() {
   const ws = new WebSocket(`${proto}://${location.host}`);
   const session = {
     id,
-    title: `Session ${id}`,
+    title: `Terminal ${id}`,
     container,
     term,
     fitAddon,
@@ -186,7 +200,11 @@ function createSession() {
   };
 
   sessions.push(session);
+  enteringSessionId = id;
   activateSession(id);
+
+  container.classList.add('opening');
+  container.addEventListener('animationend', () => container.classList.remove('opening'), { once: true });
 }
 
 addSessionButton.addEventListener('click', createSession);
